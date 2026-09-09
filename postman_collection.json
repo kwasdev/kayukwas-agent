@@ -1,0 +1,225 @@
+{
+  "info": {
+    "name": "KWaS Marketing REST API",
+    "_postman_id": "kwas-marketing-api-v1",
+    "description": "Postman Collection for KWaS Marketing REST API (Standalone Slim 4 + Eloquent)",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:8080",
+      "type": "string"
+    },
+    {
+      "key": "token",
+      "value": "kwas-marketing-secret-token-2026",
+      "type": "string"
+    }
+  ],
+  "item": [
+    {
+      "name": "Health Check",
+      "request": {
+        "method": "GET",
+        "url": "{{baseUrl}}/"
+      }
+    },
+    {
+      "name": "Auth",
+      "item": [
+        {
+          "name": "Login",
+          "request": {
+            "method": "POST",
+            "url": "{{baseUrl}}/api/v1/auth/login",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"admin@kayukwas.com\",\n  \"password\": \"password123\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Get Profile (Me)",
+          "request": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/v1/auth/me",
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }]
+          }
+        }
+      ]
+    },
+    {
+      "name": "Master Catalogs",
+      "item": [
+        {
+          "name": "Get Products Catalog (with BOM)",
+          "request": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/v1/marketing/catalogs/products",
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }]
+          }
+        },
+        {
+          "name": "Get Packings",
+          "request": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/v1/marketing/catalogs/packings",
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }]
+          }
+        },
+        {
+          "name": "Get Finishings",
+          "request": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/v1/marketing/catalogs/finishings",
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }]
+          }
+        },
+        {
+          "name": "Get Stuffings",
+          "request": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/v1/marketing/catalogs/stuffings",
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }]
+          }
+        }
+      ]
+    },
+    {
+      "name": "Buyers",
+      "item": [
+        {
+          "name": "List Buyers",
+          "request": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/v1/marketing/buyers",
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }]
+          }
+        },
+        {
+          "name": "Create Buyer",
+          "request": {
+            "method": "POST",
+            "url": "{{baseUrl}}/api/v1/marketing/buyers",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"buyerCode\": \"BYR-SAMPLE-01\",\n  \"description\": \"Sample International Buyer\",\n  \"isActive\": true\n}"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Purchasing Orders (PO)",
+      "item": [
+        {
+          "name": "Simulate Order (Draft Simulation)",
+          "request": {
+            "method": "POST",
+            "url": "{{baseUrl}}/api/v1/marketing/orders/draft-simulate",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"orderItems\": [\n    {\n      \"productId\": 1,\n      \"quantity\": 200,\n      \"cubicMeter\": 9.6\n    }\n  ]\n}"
+            }
+          }
+        },
+        {
+          "name": "Create Purchasing Order (Atomic)",
+          "request": {
+            "method": "POST",
+            "url": "{{baseUrl}}/api/v1/marketing/orders",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"buyerId\": 1,\n  \"orderNumber\": \"PO-2026-EU-001\",\n  \"orderDate\": \"2026-09-09\",\n  \"targetDate\": \"2026-11-30\",\n  \"orderItems\": [\n    {\n      \"productId\": 1,\n      \"quantity\": 200,\n      \"construction\": \"KD\"\n    }\n  ]\n}"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Work Orders (SPK)",
+      "item": [
+        {
+          "name": "Issue Work Order from PO",
+          "request": {
+            "method": "POST",
+            "url": "{{baseUrl}}/api/v1/marketing/orders/1/issue-spk",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"orderNumber\": \"SPK-2026-09-001\",\n  \"orderType\": \"COC\",\n  \"projectName\": \"Living Room Collection\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Marketing Digital Confirmation",
+          "request": {
+            "method": "POST",
+            "url": "{{baseUrl}}/api/v1/marketing/work-orders/1/confirm",
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }]
+          }
+        }
+      ]
+    },
+    {
+      "name": "AI Assistant (WhatsApp & PWA Chatbot)",
+      "item": [
+        {
+          "name": "Fuzzy Search (Products/Buyers)",
+          "request": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/v1/marketing/ai/fuzzy-search?query=IKEA",
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }]
+          }
+        },
+        {
+          "name": "AI Chat (PWA Chatbot)",
+          "request": {
+            "method": "POST",
+            "url": "{{baseUrl}}/api/v1/marketing/ai/chat",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"userPrompt\": \"Catatkan pesanan 250 pcs Meja Kopi untuk buyer IKEA\",\n  \"conversationId\": \"chat_session_01\"\n}"
+            }
+          }
+        },
+        {
+          "name": "AI Chat Action (Card Button Click)",
+          "request": {
+            "method": "POST",
+            "url": "{{baseUrl}}/api/v1/marketing/ai/chat/action",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"actionType\": \"confirm_spk\",\n  \"buyerId\": 1,\n  \"productId\": 1,\n  \"quantity\": 250,\n  \"orderType\": \"COC\"\n}"
+            }
+          }
+        }
+      ]
+    }
+  ]
+}
